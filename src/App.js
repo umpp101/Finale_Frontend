@@ -20,7 +20,9 @@ class App extends Component {
   }
 
 // ***********************************************************************************
-handleLoginSubmit = async(e,loginState) =>{
+handleLoginSubmit = async(event,loginState) =>{
+  event.preventDefault();
+  console.log(loginState)
   const fetchUrl = ("http://localhost:3000/login")
   const settings = {
     method: "POST",
@@ -46,7 +48,7 @@ handleLoginSubmit = async(e,loginState) =>{
     }
   }, 
   // () => this.fetchUsers(),
-  () => this.fetchCurrentUserPosts(),
+  // () => this.fetchCurrentUserPosts(),
   ()=> this.props.history.push("/homepage")
   )
 };
@@ -59,14 +61,16 @@ handleLoginSubmit = async(e,loginState) =>{
 //     allUsers: apiData.users
 // })
 // }
-fetchCurrentUserPosts = async() => {
-  const response = await fetch(`http://localhost:3000/users/${this.state.currentUser.id}/posts`)
-  const apiData = await response.json();
-  console.log(apiData.posts)
-  this.setState({
-    currentUserPosts: {...apiData.posts}
-  })
-  }
+
+
+// fetchCurrentUserPosts = async() => {
+//   const response = await fetch(`http://localhost:3000/users/${this.state.currentUser.id}/posts`)
+//   const apiData = await response.json();
+//   console.log(apiData.posts)
+//   this.setState({
+//     currentUserPosts: {...apiData.posts}
+//   })
+//   }
 
   render() {
     return (
