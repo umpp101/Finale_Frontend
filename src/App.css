@@ -28,8 +28,73 @@
   color: #61dafb;
 }
 
+*{
+  background-color: #60833A;
+}
+label{
+  color: white;
+  font-weight: 700;
+}
 
+.firstnameLabel {
+  margin-left: 16%;
+}
 
+.lastnameLabel {
+margin-right: 76%;
+}
+
+.text-center {
+  text-align: center!important;
+  color: #fff;
+}
+
+.text-center a {
+  text-align: center!important;
+  color: #fff;
+  text-decoration:underline;
+}
+
+.form-control {
+  width: 50%;
+  border: 1.5px solid #e38b00;
+  border-radius: 0.75rem;
+}
+
+.customFirst.form-control {
+  margin-left: 46.5%;
+  width: 45%;
+}
+
+.customLast.form-control {
+  margin-right: 45.5%;
+  width: 45%;
+}
+
+.form-row {
+  margin-bottom: 20px;
+}
+
+.btn-primary-create-account {
+  color: black;
+  background-color: #e38b00 !important;
+  border-color: #e38b00 !important;
+  border-radius: 100rem !important;
+  width: 20%;
+  margin-left: 40%;
+  margin-bottom: 10px;
+  font-weight: 500
+}
+.btn-primary-login {
+  color: black;
+  background-color: #e38b00 !important;
+  border-color: #e38b00 !important;
+  border-radius: 100rem !important;
+  width: 9%;
+  margin-left: 46%;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
 
 @keyframes App-logo-spin {
   from {
@@ -43,7 +108,7 @@
 
 /* arya added  */
 
-.Formlife {
+/* .Formlife {
   margin-left: 34%;
   background: #fff;
   border: 1px solid #ccc;
@@ -78,6 +143,6 @@
   .logincontainer  img {
     max-width: 80px;
   border-radius: 50%;
-  }
+  } */
 
   /* end */
