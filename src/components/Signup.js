@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react'
 import { Form, Col } from "react-bootstrap";
-import { genders } from './Genders'
+
 
 class Signup extends Component {
     constructor() {
@@ -26,28 +26,35 @@ class Signup extends Component {
     render() {
         
         return (
+            <div className="signupPage">
           <form
             onSubmit={e => {
               this.props.handleSignupSubmit(e, this.state);
             }}
           >
-            <h3 align="center">Sign up</h3>
+            <h1 className="login-logo">Jhana</h1>
+            <div className="form-group" align="center">
+              <label align="left">First Name</label>
+              <input
+                name="first_name"
+                className="form-control"
+                placeholder="Enter first name"
+                onChange={e => this.handleChange(e)}
+                value={this.state.first_name}
+              />
+            </div>
 
-            <Form>
-              <Form.Row>
-                <Col align="center">
-                <label className="firstnameLabel">First Name</label>
-                  <Form.Control className="customFirst" name="first_name" placeholder="First name" 
-                  onChange={(e) => this.handleChange(e)} value={this.state.first_name}/>
-                </Col>
-                <Col align="center">
-                <label className="lastnameLabel">Last Name</label>
-                  <Form.Control name="last_name" className="customLast" placeholder="Last name" 
-                  onChange={(e) => this.handleChange(e)} value={this.state.last_name}/>
-                </Col>
-              </Form.Row>
-            </Form>
-            
+            <div className="form-group" align="center">
+              <label align="left">Last Name</label>
+              <input
+                name="last_name"
+                className="form-control"
+                placeholder="Enter last name"
+                onChange={e => this.handleChange(e)}
+                value={this.state.last_name}
+              />
+            </div>
+
             <div className="form-group" align="center">
               <label align="left">Username</label>
               <input
@@ -104,6 +111,7 @@ class Signup extends Component {
               <a href="/login">Sign In</a>
             </p>
           </form>
+        </div>
         );
     }
 }

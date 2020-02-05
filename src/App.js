@@ -15,6 +15,7 @@ import {
   Switch,
   Redirect
 } from "react-router-dom";
+import Community from "./components/Community";
 
 class App extends Component {
   constructor() {
@@ -22,7 +23,10 @@ class App extends Component {
     this.state = {
       currentUser: {},
       allUsers: [],
-      currentUserPosts: []
+      allPosts:[],
+      currentUserPosts: [],
+      loading: true
+      // #this will check the current fetches, set to true, due to the fetches being done below
     };
   }
 
@@ -48,24 +52,21 @@ class App extends Component {
     const response = await fetch(fetchUrl, settings);
     const postData = await response.json();
       if (!!postData.error === true) return null 
-      console.log(postData.error)
   //  we go thru the post data keys and check if the error key is present,
   //  if so... we give them an error messages about username/password being invalid.
       localStorage.setItem("token", postData.jwt);
-      console.log(postData)
-      this.setState(
-        {
-          currentUser: {
-            id: postData.user.data.id,
-            ...postData.user.data.attributes
-            // i did this to grab and auto populate the rest of the attributes from my User
-          }
-        },
-        // () => this.fetchUsers(),
-        // () => this.fetchCurrentUserPosts(),
-        () => this.props.history.push("/homepage")
-      );
-    // }
+      this.setState({
+      currentUser: {
+        id: postData.user.data.id,
+        ...postData.user.data.attributes
+        // i did this to grab and auto populate the rest of the attributes from my User
+      }
+    },
+      () => this.fetchPosts(),
+      // () => this.fetchCurrentUserPosts(),
+    )
+    // } 
+    this.props.history.push("/homepage")
   };
   // ***********************************************************************************
 
@@ -76,7 +77,13 @@ class App extends Component {
   //     allUsers: apiData.users
   // })
   // }
-
+  fetchPosts = async() => {
+    const response = await fetch("http://localhost:3000/posts")
+    const apiData = await response.json();
+    this.setState({
+      allPosts: apiData.posts
+  })
+  }
   // fetchCurrentUserPosts = async() => {
   //   const response = await fetch(`http://localhost:3000/users/${this.state.currentUser.id}/posts`)
   //   const apiData = await response.json();
@@ -124,7 +131,7 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <nav>
+          {/* <nav>
             <ul>
               <li>
                 <Link to="/welcome">WelcomePage</Link>
@@ -139,12 +146,12 @@ class App extends Component {
                 <Link to="/homepage">Homepage</Link>
               </li>
             </ul>
-          </nav>
+          </nav> */}
           <Switch>
             {/* # Im allowing these pages: (welcome, login and signup) to be accessed whether logged in or not */}
             <Route
               exact
-              path="/welcome"
+              path="/"
               render={props => <Welcome {...props} />}
             />
             <Route
@@ -152,17 +159,22 @@ class App extends Component {
               path="/login"
               render={props => (
                 <Login {...props} handleLoginSubmit={this.handleLoginSubmit} />
-              )}
+                )}
             />
+              <Route
+              exact
+              path="/homepage"
+              render={props => <Homepage {...props} currentUser={this.state.currentUser} allPosts={this.state.allPosts}/>}
+              />
             <Route
               exact
               path="/signup"
               render={props => (
                 <Signup
-                  {...props}
-                  handleSignupSubmit={this.handleSignupSubmit}
+                {...props}
+                handleSignupSubmit={this.handleSignupSubmit}
                 />
-              )}
+                )}
             />{" "}
             )}/>
             {/* this logic checks if the keys in the object of current user has any value or not, if it does then that means.. */}
@@ -170,11 +182,12 @@ class App extends Component {
             {Object.keys(this.state.currentUser).length !== 0 ? (
               <Route
                 exact
-                path="/homepage"
-                render={props => <Homepage {...props} />}
+                path="/community"
+                render={props => <Community {...props} />}
               />
             ) : (
-              <Redirect to="/login" />
+              <Redirect from="/welcome"
+              to="/login" />
             )}
           </Switch>
         </div>

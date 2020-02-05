@@ -28,13 +28,44 @@
   color: #61dafb;
 }
 
-*{
+
+.loginPage, .signupPage{
   background-color: #60833A;
+  width: 100%;
+  position: absolute;
+  left:0;
+  right: 0;
+  top:0;
+
 }
-label{
+
+nav {
+background: #60833A;
+    height: 89px;
+    text-align: center;
+    font-weight: 900;
+}
+
+nav a {
+  color: #fff;
+}
+
+.h1, h1 {
+  font-size: 60pt;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  color: white;
+}
+.p, p {
+  font-size: 20pt;
+  font-family: 'Montserrat', sans-serif;
+  /* font-weight: bold; */
+  color: black;
+}
+/* label{
   color: white;
   font-weight: 700;
-}
+} */
 
 .firstnameLabel {
   margin-left: 16%;
@@ -96,6 +127,141 @@ margin-right: 76%;
   font-weight: 500;
 }
 
+.welcome-button-div{
+    margin-top: -2%;
+    margin-left: 27%;
+    margin-right: -2%;
+}
+
+.welcome-div{
+    background: #60833A;
+    height: 145px;
+    text-align: center;
+    font-weight: 900;
+}
+.welcomePageLogo {
+  font-size: 80pt;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  color: white;
+}
+.btn-welcome-page-1 {
+  color: black;
+  background-color: #e38b00 !important;
+  border-color: #e38b00 !important;
+  border-radius: 100rem !important;
+  width: 9%;
+  margin-left: 67%;
+  margin-right: -1%;
+  margin-top: -15px;
+  margin-bottom: 66px;
+  font-weight: 500;
+}
+.btn-welcome-page-2 {
+  color: black;
+  background-color: #e38b00 !important;
+  border-color: #e38b00 !important;
+  border-radius: 100rem !important;
+  width: 9%;
+  margin-left: 2%;
+  margin-right: 11px;
+  margin-bottom: 66px;
+  margin-top: -15px;
+  font-weight: 500;
+}
+
+.welcome-div button {
+  max-width:120px;
+}
+.Main-div{
+  background: grey;
+  height: 600px;
+  text-align: center;
+  font-weight: 900;
+  /* position: absolute; */
+  width: 100%;
+  height: 100%;
+  top: 145px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+/* .NewPost-div {
+  background: #e38b00;
+  height: 177px;
+  float: right;
+  position: absolute;
+  right: -2px;
+  bottom: -362px;
+  text-align: center;
+  font-weight: 900;
+  padding: 17px;
+  border-radius: 15px;
+  width: 32%;
+} */
+.Homepage-text {
+  width: 60%;
+  height: 300px;
+  background-color: red;
+  position: absolute;
+  top: 561px;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+.Homepage-text-greeting{
+  font-size: 5rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  padding-bottom: 34px;
+}
+.Homepage-text-paragraph{
+    font-size: 40pt;
+    font-family: 'Montserrat', sans-serif;
+    color: black;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+.Homepage-pic{
+  width: 15%;
+}
+.Secondary-Div{
+background: grey;
+  height: 600px;
+  text-align: center;
+  font-weight: 900;
+  position: absolute;
+  top: 145px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.btn-homepage-page-3 {
+  color: black;
+  background-color: #e38b00 !important;
+  border-color: #e38b00 !important;
+  border-radius: 100rem !important;
+  width: 9%;
+  margin-left: 0%;
+  margin-right: -16px;
+  margin-bottom: 66px;
+  margin-top: -15px;
+  font-weight: 500;
+}
+
+.Post-div{
+
+  background: black;
+  height: 800px;
+  /* position: absolute; */
+  text-align: center;
+  font-weight: 900;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -105,44 +271,312 @@ margin-right: 76%;
   }
 }
 
+/* ************************************* */
 
-/* arya added  */
+/* #main-nav {
 
-/* .Formlife {
-  margin-left: 34%;
-  background: #fff;
-  border: 1px solid #ccc;
-  margin-right: 34%;
-  margin-top: 2.5%;
-  padding-top: 80px;
-  padding-bottom: 80px;
+  background: #60833A;
+    height: 96px;
+    text-align: center;
+    font-weight: 900;
+    
+} */
+
+
+/* .h5, h5 {
+    font-size: 1.25rem;
+    text-align: left;
+    padding: 12px;
+  } */
+
+/* .card bg-light{
+  width: 28rem;
+    height: 350px;
+  } */
+  
+  /* .CardTitle {
+    margin-left: 0px;
+    padding: 7px;
+    margin-right: 314px;
+    text-align: left;
+  } */
+  
+  .header {
+    height: 120px;
+    background-color: #60833A;
+  }
+  
+  .navbar-brand {
+    display: inline-block;
+    padding-top: 2.3125rem;
+    padding-bottom: 1.3125rem;
+    margin-right: 1rem;
+  font-size: 100pt;
+  line-height: inherit;
+  white-space: nowrap;
+  color: white!important;
+  font-family: 'Montserrat', sans-serif;
+}
+.mainBody {
+  background-color: yellow;
+  position: absolute;
+  top: 100px;
+  bottom: 50%;
+  width:100%;
+}
+
+.content {
+  color:#fff;
 }
 
 
 
-#formBasic {
-  border-radius: 30px;
-      height: 40px;
-      width: 200px;
-      border: 1px solid #ddd;
-      padding-left: 10px;
+.Homepage-pic{
+    width: 13%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
   
-  .btn.btn-primary-submit {
-    border-radius: 30px;
-    height: 40px;
-    width: 140px;
-    border: 1px solid #ddd;
-    padding-left: 10px;
-    background: #a5a5a5;
-    color: #fff;
-    font-weight: 300;
-    font-size: 15px;
+  .postCards {
+    background-color: white!important;
+    width: 54rem;
+    height: 28rem;
+    border-radius: 22px;
+    border: 1.5px solid #e38b00;
+    margin-left: 15%;
+    margin-bottom: 1%;
+    margin-top: 1.5%;
   }
   
-  .logincontainer  img {
-    max-width: 80px;
-  border-radius: 50%;
-  } */
+  
+  
+  
+  /* Nav */
+  .nav-button1{
+    color: black !important;
+    background-color: #e38b00 !important;
+  border-color: #e38b00 !important;
+  border-radius: 100rem !important;
+  font-weight: 500;
+  font-size: 3em;
+  margin-top: 24px;
+}
+.nav-button2{
+  color: black !important;
+  background-color: #e38b00 !important;
+  border-color: #e38b00 !important;
+  border-radius: 100rem !important;
+  font-weight: 500;
+  font-size: 3em;
+  margin-top: 24px;
+}
+.nav-button3{
+  color: black !important;
+  background-color: #e38b00 !important;
+  border-color: #e38b00 !important;
+  border-radius: 100rem !important;
+  font-weight: 500;
+  font-size: 3em;
+  margin-top: 24px;
+}
+.navbar-expand .navbar-nav .nav-link {
+  margin-right: 29px;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
+}
 
-  /* end */
+
+
+
+
+/* fonts */
+.p, p {
+  font-size: 35pt;
+  font-family: 'Montserrat', sans-serif;
+  /* font-weight: bold; */
+  color: black;
+}
+.h2, h2 {
+  font-size: 6rem;
+  color: black;
+  font-weight: bold;
+}
+
+
+
+/* Pic */
+.Welcome-pic{
+  margin-top: 146px;
+  width: 18%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-left: 210px;
+}
+.welcome-content{
+  color: #fff;
+  background-color: white;
+  position: absolute;
+  top: 120px;
+  bottom: 0%;
+  width: 100%;
+}
+.Welcome-p{
+  width: 41%;
+  display: center;
+  /* margin-right: 52px; */
+  margin-left: 50;
+  position: absolute;
+  bottom: 9%;
+  left: 38%;
+  font-weight: bold;
+  font-size: 63pt;
+  font-family: 'Montserrat', sans-serif;
+}
+.footer {
+    height: 100%;
+    background-color: white;
+    position: absolute;
+    bottom: 0;
+    top: 115%;
+    width: 100%;
+  }
+  /* .column {
+    float: left;
+    width: 33.33%;
+  }
+  
+  /* Clear floats after the columns */
+  /* .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  } */ 
+  
+  .columns {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    margin: 5px 0;
+  }
+
+  .column {
+    flex: 1;
+	border: 1px solid gray;
+	margin: 2px;
+	padding: 10px;
+}
+
+.welcome-buttons1{
+  color: black !important;
+  background-color: #e38b00 !important;
+  /* border-color: #e38b00 !important; */
+  border-radius: 100rem !important;
+  font-weight: 500;
+  font-size: 4em;
+  position: absolute;
+  margin-top: 3%;
+  margin-left: 10%;
+}
+.welcome-bottom-pics{
+  width: 34%;
+  margin-left: 33%;
+  margin-top: 24%;
+  align-content: center;
+  text-align: center;
+  /* image-rendering: pixelated; */
+  image-rendering: auto;
+}
+
+.column {
+  flex: 1 1;
+  border: 7px solid white;
+  /* margin: 2px; */
+  padding: 10px;
+  border-top-color: #e38b00 !important;
+}
+
+
+/* ************************************ */
+
+.Homepage-p{
+  font-size: 39pt;
+  font-family: 'Montserrat', sans-serif;
+  /* font-weight: bold; */
+  color: black;
+  display: center !important;
+  margin-left: 31%;
+  margin-right: 31%;
+  margin-top: 2%;
+  text-align: center
+}
+
+.NewPost-div {
+  background: #e38b00;
+  /* height: 100px; */
+  float: right;
+  position: absolute;
+  right: 4%;
+  text-align: center;
+  font-weight: bold;
+  padding: 17px;
+  border-radius: 15px;
+  width: 21%;
+}
+
+.card-title1 {
+  margin-bottom: auto;
+  font-size: 2.5rem;
+  margin-left: 20px;
+  margin-top: 34px;
+  font-weight: bold;
+}
+.card-header1 {
+    padding: -3.25rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0,0,0,.03);
+    border-bottom: 1px solid white;
+    text-align: center;
+    font-size: 4rem;
+  }
+
+.postCards{
+background-color: white!important;
+width: auto;
+height: auto;
+border-radius: 22px;
+border: 1.5px solid #e38b00;
+margin-left: 7%;
+margin-right: 48%;
+margin-bottom: 2%;
+margin-top: 0.5%;
+}
+
+
+/* *********************** login */
+.loginPage{
+  background-color: #60833A;
+  width: 100%;
+  height:100%;
+  position: absolute;
+  left:0;
+  right: 0;
+  top:0;
+}
+
+.login-logo{
+  font-size: 2000%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bolder;
+  color: white;
+  margin-top: 2%;
+  text-align:center;
+}
+
+.form-control {
+  width: 18%;
+  border: 1.5px solid #e38b00;
+  border-radius: 0.75rem;
+  height: 76px;
+}

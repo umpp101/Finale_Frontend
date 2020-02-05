@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {Link} from "react-router-dom";
 
 export class Login extends Component {
     constructor() {
@@ -8,18 +9,24 @@ export class Login extends Component {
       password: ""
     };
   }
-  
+//  ********************************************************************************************************* 
   handleChange = (e) => {
-      console.log(e.target.value)
     this.setState({
       [e.target.name]: e.target.value
     })
   }
+//  ********************************************************************************************************* 
+
   render() {
     return (
+     
+      <div className="loginPage">
         <form onSubmit={(e) => {this.props.handleLoginSubmit(e, this.state)}}>
-            <h3 align="center">Sign In</h3>
-
+            <h1 className="login-logo">Jhana</h1>
+              <li>
+                <Link to="/homepage">Homepage</Link>
+              </li>
+  
             <div className="form-group" align="center">
                 <label>Username</label>
                   <input name="user_name" className="form-control" placeholder="Enter username" 
@@ -44,55 +51,10 @@ export class Login extends Component {
                 <a href="/signup">Sign Up</a>
             </p>
         </form>
+        </div>
+        
     );
   }
 }
 
 export default Login
-
-// import React, { Component } from "react";
-// import { Form, Button } from "react-bootstrap";
-// export default class Login extends Component {
-//   constructor() {
-//     super();
-//     this.state = {
-//       user_name: "",
-//       password: ""
-//     };
-//   }
- 
-//   handleChange = (e) => {
-//       console.log(e.target.value)
-//     this.setState({
-//       [e.target.name]: e.target.value
-//     })
-//   }
-//   render() {
-//     return (
-//       <div class="logincontainer">
-//       <div class="Formlife" align="center">
-
-//         <img src="https://creai-grand-est.fr/bundles/admin/images/user-empty-avatar.png"/>
-//         <Form onSubmit={(e) => {this.props.handleLoginSubmit(e, this.state) }}>
-//                     <h2>Login</h2>
-//         <Form.Group controlId="formBasic">
-//           <Form.Control type='text' name="user_name" placeholder="Username" onChange={(e) => this.handleChange (e)} value={this.state.user_name}/>
-        
-//         </Form.Group>
-//         <br></br> 
-      
-//         <Form.Group controlId="formBasic">
-//           <Form.Control type='password' name="password" placeholder="Password" onChange={(e) => this.handleChange(e)} value={this.state.password}/>
-//         </Form.Group>
-//         <br></br>
-//         <Button variant="primary-submit" type="submit">
-//           Sign Up
-//         </Button>
-//       <br></br><br></br>
-//       <u>Sign Up</u>
-//       </Form>
-//       </div>
-//       </div>
-//     );
-//   }
-// }
