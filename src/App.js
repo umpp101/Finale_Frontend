@@ -1,15 +1,16 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import logo from "./logo.svg";
 // import Navbar from './components/Navbar'
 import Homepage from "./components/Homepage";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Welcome from "./components/Welcome";
+import PostShow from "./components/PostShow";
+import Modal from "./components/Modal";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import {
   Route,
-  Link,
   BrowserRouter as Router,
   withRouter,
   Switch,
@@ -22,6 +23,7 @@ class App extends Component {
     super();
     this.state = {
       currentUser: {},
+      currentPost: {},
       allUsers: [],
       allPosts:[],
       currentUserPosts: [],
@@ -68,6 +70,15 @@ class App extends Component {
     // } 
     this.props.history.push("/homepage")
   };
+
+  handleLogout = () => {
+    localStorage.removeItem("token");
+    this.props.history.push("/");
+    this.setState({
+      currentUser: {}
+    });
+  };
+  
   // ***********************************************************************************
 
   // fetchUsers = async() => {
@@ -125,30 +136,66 @@ class App extends Component {
       () => this.props.history.push("/homepage")
     );
   };
+// ***********************************************************
+  handleNewPostSubmit = async (postForm, componentName) => {
+    // event.preventDefault();
+    const fetchUrl = "http://localhost:3000/posts";
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        post: {
+          title: postForm.title,
+          body: postForm.body,
+          user_id: 2,
+          category_id: 1,
+        }
+      })
+    };
+    const response = await fetch(fetchUrl, settings);
+    const postData = await response.json();
+    console.log(postData)
+    if (!!postData.error === true) return null 
+    console.log(postData.error)
+    await this.setState({
+      allPosts: [...this.state.allPosts, {...postData.post} ]
+    })
+    if (componentName === PostShow) {
+      console.log('this.')
+      this.props.history.push('/homepage')
+    }
+
+  }
+
+
+  renderSpecificPost = (post) => {
+    this.setState({
+      currentPost: post
+    }, () => this.props.history.push('/postShow') )
+    
+}
+
+
 
 
   render() {
+    console.log(this.props.history)
     return (
-      <Router>
-        <div>
-          {/* <nav>
-            <ul>
-              <li>
-                <Link to="/welcome">WelcomePage</Link>
-              </li>
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-              <li>
-                <Link to="/signup">Signup</Link>
-              </li>
-              <li>
-                <Link to="/homepage">Homepage</Link>
-              </li>
-            </ul>
-          </nav> */}
+      <div>
           <Switch>
             {/* # Im allowing these pages: (welcome, login and signup) to be accessed whether logged in or not */}
+            <Route
+              exact
+              path="/postShow"
+              render={props => <PostShow {...props} 
+              currentUser={this.state.currentUser} 
+              currentPost={this.state.currentPost}
+              newPost={this.handleNewPostSubmit}
+              handleLogout={this.handleLogout}/>}
+            />
             <Route
               exact
               path="/"
@@ -164,7 +211,12 @@ class App extends Component {
               <Route
               exact
               path="/homepage"
-              render={props => <Homepage {...props} currentUser={this.state.currentUser} allPosts={this.state.allPosts}/>}
+              render={props => <Homepage {...props} 
+              currentUser={this.state.currentUser} 
+              newPost={this.handleNewPostSubmit} 
+              allPosts={this.state.allPosts}
+              renderSpecificPost={this.renderSpecificPost}
+              handleLogout={this.handleLogout}/>}
               />
             <Route
               exact
@@ -180,18 +232,28 @@ class App extends Component {
             {/* this logic checks if the keys in the object of current user has any value or not, if it does then that means.. */}
             {/* someone is logged in and can access the homepage if not i then redirect them to login page! */}
             {Object.keys(this.state.currentUser).length !== 0 ? (
+              <>
               <Route
                 exact
                 path="/community"
                 render={props => <Community {...props} />}
               />
+               <Route
+              exact
+              path="/homepage"
+              render={props => <Homepage {...props} 
+              currentUser={this.state.currentUser} 
+              newPost={this.handleNewPostSubmit} 
+              allPosts={this.state.allPosts}
+              renderSpecificPost={this.renderSpecificPost}/>}
+              />
+              </>
             ) : (
               <Redirect from="/welcome"
               to="/login" />
             )}
           </Switch>
         </div>
-      </Router>
     );
   }
 }

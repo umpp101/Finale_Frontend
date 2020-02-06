@@ -1,74 +1,50 @@
-import React, { Component} from "react";
+import React, { Component } from 'react'
 import { Card, Navbar, Nav, Modal } from "react-bootstrap";
 
-export class Homepage extends Component {
+export class PostShow extends Component {
 
-   constructor() {
-       super()
-   
-       this.state = {
-            currentPost: {},
-            modal: false,
-            title: "",
-            body: "",
-            view_count: 11,
-            user_id: 3,
-            category_id: 2
-       }
-   }
-   
-   handleChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
-  }
-
-  
-
-  modalClose() {
-    this.setState({
-      title: "",
-      body: "",
-      modal: false
-    });
-  }
-
-  modalOpen() {
-    this.setState({ 
-        modal: true 
-    });
-  }
-
+    constructor() {
+        super()
     
-
-    intro =
-        "This Community Space is for survivors, loved ones, educators to share their experiences, express their thoughts, connect with other members of their community who have been affected by sexual assault. ";
-    img = "https://lh4.googleusercontent.com/x7skKzDs0peFDUV-BODxU7x9UYpxQyrPhQxwx1Df6tU1HFcxzPj0GHgcdIpU2bv9-LjwCYYcCQ1KevL0rr0D2p-V6Kmt3HIkA-2_fLTFK6QfntGyVQ7RVkZAg2Ni1YbGTzYS5xu1"
-
-    renderPosts = () => {
-        if (this.props.allPosts) {
-            const result = this.props.allPosts.map(post => {
-                return (
-                    // {<img src={this.img}>}
-                    <Card onClick={() => {this.props.renderSpecificPost(post)}} className="postCards">
-                        <Card.Title className="card-title1"> Admin </Card.Title>
-                        <Card.Body>
-                            <Card.Header className="card-header1">{post.title}</Card.Header>
-                            <Card.Text>{post.body}</Card.Text>
-                        </Card.Body>
-                    </Card>
-                );
-            });
-            return result;
-            console.log("result:", result);
+        this.state = {
+             currentPost: {},
+             modal: false,
+             title: "",
+             body: "",
+             view_count: 11,
+             user_id: 3,
+             category_id: 2
         }
-    };
+    }
+    
+    handleChange = (e) => {
+     this.setState({
+       [e.target.name]: e.target.value
+     })
+   }
+ 
+   
+
+    modalClose() {
+        this.setState({
+          title: "",
+          body: "",
+          modal: false
+        });
+      }
+    
+      modalOpen() {
+        this.setState({ 
+            modal: true 
+        });
+      }
+
 
 
     render() {
-    
+        console.log(this.constructor.name)
         return (
-           
+
             <div>
                 <div class="header">
                     <Navbar>
@@ -77,8 +53,8 @@ export class Homepage extends Component {
                         <Navbar.Collapse className="justify-content-end">
                             <Nav>
                                 <Nav.Link className="nav-button1" href="">My Journal</Nav.Link> <br></br>
-                                <Nav.Link className="nav-button2" href="">Community</Nav.Link> <br></br>
-                                <Nav.Link className="nav-button3" href="" onClick={this.props.handleLogout}>Logout</Nav.Link> <br></br>
+                                <Nav.Link className="nav-button2" href="/homepage">Community</Nav.Link> <br></br>
+                                <Nav.Link className="nav-button3" href=""onClick={this.props.handleLogout}>Logout</Nav.Link> <br></br>
                             </Nav>
                         </Navbar.Collapse>
                     </Navbar>
@@ -122,25 +98,33 @@ export class Homepage extends Component {
                                 className="form-control"
                             />
                         </div>
-                        
+
                         <div className="form-group">
-                            <button onClick={e => { 
-                                this.props.newPost(this.state);
-                                this.modalClose();}} type="button">
+                            <button onClick={e => {
+                                this.props.newPost(this.state, this.constructor.name);
+                                this.modalClose();
+                            }} type="button">
                                 Submit
                             </button>
                         </div>
                     </Modal>
-        {/* **************************************************** */}
+                    {/* **************************************************** */}
 
                     <div>
-                        {this.renderPosts()}
+                        <Card className="postCards">
+                            <Card.Title className="card-title1">{this.props.currentPost.user_id}</Card.Title>
+                            <Card.Body>
+                                <Card.Header className="card-header1">{this.props.currentPost.title}</Card.Header>
+                                <Card.Text>{this.props.currentPost.body}</Card.Text>
+                            </Card.Body>
+                        </Card>
                     </div>
-
                 </div>
 
             </div>
         );
     }
 }
-export default Homepage;
+
+export default PostShow
+
