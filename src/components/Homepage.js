@@ -1,5 +1,6 @@
 import React, { Component} from "react";
 import { Card, Navbar, Nav, Modal } from "react-bootstrap";
+import {Pagination} from "semantic-ui-react";
 
 export class Homepage extends Component {
 
@@ -135,8 +136,10 @@ export class Homepage extends Component {
 
                     <div>
                         {this.renderPosts()}
+{/* <Pagination totalPages={10}/> */}
                     </div>
-
+                    <p href="javascript" onClick={() => { this.props.fetchMore('Next') }}> Next </p>
+                    <p href="javascript" onClick={() => { this.props.fetchMore('prev') }}> prev </p>
                 </div>
 
             </div>

@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react'
-import { Form, Col } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 
 
 class Signup extends Component {

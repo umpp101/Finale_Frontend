@@ -27,7 +27,8 @@ class App extends Component {
       allUsers: [],
       allPosts:[],
       currentUserPosts: [],
-      loading: true
+      loading: true,
+      currentPage: 1
       // #this will check the current fetches, set to true, due to the fetches being done below
     };
   }
@@ -57,18 +58,15 @@ class App extends Component {
   //  we go thru the post data keys and check if the error key is present,
   //  if so... we give them an error messages about username/password being invalid.
       localStorage.setItem("token", postData.jwt);
-      this.setState({
+      await this.setState({
       currentUser: {
         id: postData.user.data.id,
         ...postData.user.data.attributes
         // i did this to grab and auto populate the rest of the attributes from my User
       }
-    },
-      () => this.fetchPosts(),
-      // () => this.fetchCurrentUserPosts(),
-    )
-    // } 
-    this.props.history.push("/homepage")
+    })
+    await this.fetchPosts()
+    this.props.history.push("/homepage") 
   };
 
   handleLogout = () => {
@@ -91,8 +89,10 @@ class App extends Component {
   fetchPosts = async() => {
     const response = await fetch("http://localhost:3000/posts")
     const apiData = await response.json();
+    console.log(apiData.posts)
     this.setState({
-      allPosts: apiData.posts
+      allPosts: apiData.posts,
+      loading: false
   })
   }
   // fetchCurrentUserPosts = async() => {
@@ -178,11 +178,53 @@ class App extends Component {
     
 }
 
+  fetchMorePosts=(direction) =>{
+    let pageNum = direction === 'prev' ? this.state.currentPage - 1 : this.state.currentPage + 1
+    const url = ("http://localhost:3000/posts/?page=" + (pageNum))
+    fetch(url).then(res => res.json()).then((json) => {
+      this.setState({
+        allPosts: json.posts,
+        loading: false,
+        currentPage: pageNum
+      })
+    })
+  }
+
+// fetchMorePosts = async() => {
+//   const response = await fetch("http://localhost:3000/posts/?page=" + (this.state.currentPage + 1))
+//   //we add the "page Number" URL param because rails needs it to return the posts according to the page
+//   const apiData = await response.json();
+//   console.log(apiData.posts)
+//   this.setState({
+//     allPosts: apiData.posts,
+//     loading: false
+// })
+// }
+
+  componentDidMount(){
+    if (localStorage.getItem("token") !== null){
+
+    fetch("http://localhost:3000/reAuth", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        'Authorization': localStorage.getItem("token")
+      }
+    })
+    .then(res => res.json())
+    .then((data) =>{
+      console.log(data);
+      this.setState({
+        currentUser: data.user.data.attributes
+      })
+    })
+  }
+  }
 
 
 
   render() {
-    console.log(this.props.history)
     return (
       <div>
           <Switch>
@@ -216,7 +258,9 @@ class App extends Component {
               newPost={this.handleNewPostSubmit} 
               allPosts={this.state.allPosts}
               renderSpecificPost={this.renderSpecificPost}
-              handleLogout={this.handleLogout}/>}
+              handleLogout={this.handleLogout}
+              fetchMore={this.fetchMorePosts}
+              />}
               />
             <Route
               exact
