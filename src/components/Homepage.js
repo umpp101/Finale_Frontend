@@ -19,6 +19,7 @@ export class Homepage extends Component {
    }
    
    handleChange = (e) => {
+       console.log(e.target.value)
     this.setState({
       [e.target.name]: e.target.value
     })
@@ -39,35 +40,42 @@ export class Homepage extends Component {
         modal: true 
     });
   }
-
+  truncate = function(str, length=400, ending='....'){
+    if (str.length > length) {
+      return str.substring(0, length - ending.length) + ending;
+    } else {
+      return str;
+    }
+  };
     
-
-    intro =
-        "This Community Space is for survivors, loved ones, educators to share their experiences, express their thoughts, connect with other members of their community who have been affected by sexual assault. ";
-    img = "https://lh4.googleusercontent.com/x7skKzDs0peFDUV-BODxU7x9UYpxQyrPhQxwx1Df6tU1HFcxzPj0GHgcdIpU2bv9-LjwCYYcCQ1KevL0rr0D2p-V6Kmt3HIkA-2_fLTFK6QfntGyVQ7RVkZAg2Ni1YbGTzYS5xu1"
-
-    renderPosts = () => {
-        if (this.props.allPosts) {
-            const result = this.props.allPosts.map(post => {
-                return (
-                    // {<img src={this.img}>}
+  intro =
+  "This Community Space is for survivors, loved ones, educators to share their experiences, express their thoughts, connect with other members of their community who have been affected by sexual assault. ";
+  img = "https://lh4.googleusercontent.com/x7skKzDs0peFDUV-BODxU7x9UYpxQyrPhQxwx1Df6tU1HFcxzPj0GHgcdIpU2bv9-LjwCYYcCQ1KevL0rr0D2p-V6Kmt3HIkA-2_fLTFK6QfntGyVQ7RVkZAg2Ni1YbGTzYS5xu1"
+  
+  renderPosts = () => {
+      if (this.props.allPosts) {
+          const result = this.props.allPosts.map(post => {
+              return (
+                  // {<img src={this.img}>}
                     <Card onClick={() => {this.props.renderSpecificPost(post)}} className="postCards">
                         <Card.Title className="card-title1"> Admin </Card.Title>
                         <Card.Body>
                             <Card.Header className="card-header1">{post.title}</Card.Header>
-                            <Card.Text>{post.body}</Card.Text>
+                            <Card.Text>{this.truncate(post.body)}</Card.Text>
                         </Card.Body>
+                        <Card.Link className="post-comments-links" align="left"><u>{post.comments.length} Comments</u></Card.Link>
                     </Card>
+                    
                 );
             });
             return result;
             console.log("result:", result);
         }
     };
-
-
-    render() {
     
+    
+    render() {
+        
         return (
            
             <div>
@@ -136,7 +144,6 @@ export class Homepage extends Component {
 
                     <div>
                         {this.renderPosts()}
-{/* <Pagination totalPages={10}/> */}
                     </div>
                     <p href="javascript" onClick={() => { this.props.fetchMore('Next') }}> Next </p>
                     <p href="javascript" onClick={() => { this.props.fetchMore('prev') }}> prev </p>

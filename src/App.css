@@ -540,6 +540,17 @@ background: grey;
     text-align: center;
     font-size: 4rem;
   }
+.post-comments-links{
+    color: #60833A;
+    text-decoration: none;
+    background-color: transparent;
+    text-align: left;
+    margin: left;
+    margin-left: 82%;
+    font-size: 2.5rem;
+
+    
+}
 
 .postCards{
 background-color: white!important;
@@ -552,7 +563,33 @@ margin-right: 48%;
 margin-bottom: 2%;
 margin-top: 0.5%;
 }
-
+.commentCards{
+    background-color: white!important;
+    width: 35%;
+    height: max-content;
+    border-radius: 22px;
+    border: 1.5px solid #e38b00;
+    margin-left: 17%;
+    margin-bottom: 2%;
+    margin-top: -1.5%;
+    position: relative;
+}
+.new-comment-form{
+  width: 18%;
+    background-color: white!important;
+    width: 35%;
+    border-radius: 22px;
+    margin-left: auto;
+    margin-right: 58%;
+    margin-bottom: 2%;
+    margin-top: 3.5%;
+    border: 1.5px solid #e38b00;
+    border-radius: 0.75rem;
+    height: 125px;
+    position: relative;
+    font-size: 35pt;
+    font-family: 'Montserrat', sans-serif;
+}
 
 /* *********************** login */
 .loginPage{

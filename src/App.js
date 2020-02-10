@@ -25,7 +25,8 @@ class App extends Component {
       currentUser: {},
       currentPost: {},
       allUsers: [],
-      allPosts:[],
+      allPosts: [],
+      allComments: [],
       currentUserPosts: [],
       loading: true,
       currentPage: 1
@@ -54,19 +55,20 @@ class App extends Component {
     };
     const response = await fetch(fetchUrl, settings);
     const postData = await response.json();
-      if (!!postData.error === true) return null 
-  //  we go thru the post data keys and check if the error key is present,
-  //  if so... we give them an error messages about username/password being invalid.
-      localStorage.setItem("token", postData.jwt);
-      await this.setState({
+    console.log(postData)
+    if (!!postData.error === true) return null
+    //  we go thru the post data keys and check if the error key is present,
+    //  if so... we give them an error messages about username/password being invalid.
+    localStorage.setItem("token", postData.jwt);
+    await this.setState({
       currentUser: {
-        id: postData.user.data.id,
+        id: Number(postData.user.data.id),
         ...postData.user.data.attributes
         // i did this to grab and auto populate the rest of the attributes from my User
       }
     })
     await this.fetchPosts()
-    this.props.history.push("/homepage") 
+    this.props.history.push("/homepage")
   };
 
   handleLogout = () => {
@@ -76,7 +78,7 @@ class App extends Component {
       currentUser: {}
     });
   };
-  
+
   // ***********************************************************************************
 
   // fetchUsers = async() => {
@@ -86,14 +88,14 @@ class App extends Component {
   //     allUsers: apiData.users
   // })
   // }
-  fetchPosts = async() => {
+  fetchPosts = async () => {
     const response = await fetch("http://localhost:3000/posts")
     const apiData = await response.json();
     console.log(apiData.posts)
     this.setState({
       allPosts: apiData.posts,
       loading: false
-  })
+    })
   }
   // fetchCurrentUserPosts = async() => {
   //   const response = await fetch(`http://localhost:3000/users/${this.state.currentUser.id}/posts`)
@@ -121,13 +123,13 @@ class App extends Component {
     };
     const response = await fetch(fetchUrl, settings);
     const postData = await response.json();
-    if (!!postData.error === true) return null 
-      console.log(postData.error)
+    if (!!postData.error === true) return null
+    console.log(postData.error)
     localStorage.setItem("token", postData.jwt);
     this.setState(
       {
         currentUser: {
-          id: postData.user.data.id,
+          id: Number(postData.user.data.id),
           ...postData.user.data.attributes
         }
       },
@@ -136,8 +138,9 @@ class App extends Component {
       () => this.props.history.push("/homepage")
     );
   };
-// ***********************************************************
+  // ***********************************************************
   handleNewPostSubmit = async (postForm, componentName) => {
+    console.log(postForm)
     // event.preventDefault();
     const fetchUrl = "http://localhost:3000/posts";
     const settings = {
@@ -158,10 +161,10 @@ class App extends Component {
     const response = await fetch(fetchUrl, settings);
     const postData = await response.json();
     console.log(postData)
-    if (!!postData.error === true) return null 
+    if (!!postData.error === true) return null
     console.log(postData.error)
     await this.setState({
-      allPosts: [...this.state.allPosts, {...postData.post} ]
+      allPosts: [...this.state.allPosts, { ...postData.post }]
     })
     if (componentName === PostShow) {
       console.log('this.')
@@ -170,15 +173,59 @@ class App extends Component {
 
   }
 
+  handleNewCommentSubmit = async (commentForm) => {
+    console.log(commentForm)
+    // e.preventDefault();
+    const fetchUrl = "http://localhost:3000/comments";
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        comment: {
+          body: commentForm,
+          user_id: this.state.currentUser.id,
+          post_id: this.state.currentPost.id,
+        }
+      })
+    };
+    const response = await fetch(fetchUrl, settings);
+    const postData = await response.json();
+    console.log(postData)
+    // if (!!postData.error === true) return null 
+    // console.log(postData.error)
+    let posts = this.state.allPosts.map(post => {
+      if (post.id === this.state.currentPost.id) {
+        post.comments = [...post.comments, postData.comment]
+        return post
+      } else {
+        return post
+      }
+    });
+    let newPost = {...this.state.currentPost}
+    newPost.comments = [...newPost.comments, postData.comment]
+
+    await this.setState({
+      allPosts: posts,
+      currentPost: newPost
+    })
+    this.props.history.push('/homepage')
+  }
+
+
+
+
 
   renderSpecificPost = (post) => {
     this.setState({
       currentPost: post
-    }, () => this.props.history.push('/postShow') )
-    
-}
+    }, () => this.props.history.push('/postShow'))
 
-  fetchMorePosts=(direction) =>{
+  }
+
+  fetchMorePosts = (direction) => {
     let pageNum = direction === 'prev' ? this.state.currentPage - 1 : this.state.currentPage + 1
     const url = ("http://localhost:3000/posts/?page=" + (pageNum))
     fetch(url).then(res => res.json()).then((json) => {
@@ -190,36 +237,40 @@ class App extends Component {
     })
   }
 
-// fetchMorePosts = async() => {
-//   const response = await fetch("http://localhost:3000/posts/?page=" + (this.state.currentPage + 1))
-//   //we add the "page Number" URL param because rails needs it to return the posts according to the page
-//   const apiData = await response.json();
-//   console.log(apiData.posts)
-//   this.setState({
-//     allPosts: apiData.posts,
-//     loading: false
-// })
-// }
+  // fetchMorePosts = async() => {
+  //   const response = await fetch("http://localhost:3000/posts/?page=" + (this.state.currentPage + 1))
+  //   //we add the "page Number" URL param because rails needs it to return the posts according to the page
+  //   const apiData = await response.json();
+  //   console.log(apiData.posts)
+  //   this.setState({
+  //     allPosts: apiData.posts,
+  //     loading: false
+  // })
+  // }
 
-  componentDidMount(){
-    if (localStorage.getItem("token") !== null){
+  componentDidMount() {
+    if (localStorage.getItem("token") !== null) {
 
-    fetch("http://localhost:3000/reAuth", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        'Authorization': localStorage.getItem("token")
-      }
-    })
-    .then(res => res.json())
-    .then((data) =>{
-      console.log(data);
-      this.setState({
-        currentUser: data.user.data.attributes
+      fetch("http://localhost:3000/reAuth", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          'Authorization': localStorage.getItem("token")
+        }
       })
-    })
-  }
+        .then(res => res.json())
+        .then((data) => {
+          console.log(data);
+          this.setState({
+            currentUser: {
+              id: Number(data.user.data.id),
+              ...data.user.data.attributes
+            }
+          })
+        })
+        .then(() => this.fetchPosts())
+    }
   }
 
 
@@ -227,77 +278,78 @@ class App extends Component {
   render() {
     return (
       <div>
-          <Switch>
-            {/* # Im allowing these pages: (welcome, login and signup) to be accessed whether logged in or not */}
-            <Route
-              exact
-              path="/postShow"
-              render={props => <PostShow {...props} 
-              currentUser={this.state.currentUser} 
+        <Switch>
+          {/* # Im allowing these pages: (welcome, login and signup) to be accessed whether logged in or not */}
+          <Route
+            exact
+            path="/postShow"
+            render={props => <PostShow {...props}
+              currentUser={this.state.currentUser}
               currentPost={this.state.currentPost}
               newPost={this.handleNewPostSubmit}
-              handleLogout={this.handleLogout}/>}
-            />
-            <Route
-              exact
-              path="/"
-              render={props => <Welcome {...props} />}
-            />
-            <Route
-              exact
-              path="/login"
-              render={props => (
-                <Login {...props} handleLoginSubmit={this.handleLoginSubmit} />
-                )}
-            />
-              <Route
-              exact
-              path="/homepage"
-              render={props => <Homepage {...props} 
-              currentUser={this.state.currentUser} 
-              newPost={this.handleNewPostSubmit} 
+              newComment={this.handleNewCommentSubmit}
+              handleLogout={this.handleLogout} />}
+          />
+          <Route
+            exact
+            path="/"
+            render={props => <Welcome {...props} />}
+          />
+          <Route
+            exact
+            path="/login"
+            render={props => (
+              <Login {...props} handleLoginSubmit={this.handleLoginSubmit} />
+            )}
+          />
+          <Route
+            exact
+            path="/homepage"
+            render={props => <Homepage {...props}
+              currentUser={this.state.currentUser}
+              newPost={this.handleNewPostSubmit}
               allPosts={this.state.allPosts}
               renderSpecificPost={this.renderSpecificPost}
               handleLogout={this.handleLogout}
               fetchMore={this.fetchMorePosts}
-              />}
-              />
-            <Route
-              exact
-              path="/signup"
-              render={props => (
-                <Signup
+            />}
+          />
+          <Route
+            exact
+            path="/signup"
+            render={props => (
+              <Signup
                 {...props}
                 handleSignupSubmit={this.handleSignupSubmit}
-                />
-                )}
-            />{" "}
-            )}/>
+              />
+            )}
+          />{" "}
+          )}/>
             {/* this logic checks if the keys in the object of current user has any value or not, if it does then that means.. */}
-            {/* someone is logged in and can access the homepage if not i then redirect them to login page! */}
-            {Object.keys(this.state.currentUser).length !== 0 ? (
-              <>
+          {/* someone is logged in and can access the homepage if not i then redirect them to login page! */}
+          {Object.keys(this.state.currentUser).length !== 0 ? (
+            <>
               <Route
                 exact
                 path="/community"
                 render={props => <Community {...props} />}
               />
-               <Route
-              exact
-              path="/homepage"
-              render={props => <Homepage {...props} 
-              currentUser={this.state.currentUser} 
-              newPost={this.handleNewPostSubmit} 
-              allPosts={this.state.allPosts}
-              renderSpecificPost={this.renderSpecificPost}/>}
+              <Route
+                exact
+                path="/homepage"
+                render={props => <Homepage {...props}
+                  currentUser={this.state.currentUser}
+                  newPost={this.handleNewPostSubmit}
+                  allPosts={this.state.allPosts}
+                  renderSpecificPost={this.renderSpecificPost} />}
               />
-              </>
-            ) : (
+            </>
+          ) : (
               <Redirect from="/welcome"
-              to="/login" />
+                to="/login" />
             )}
-          </Switch>
-        </div>
+        </Switch>
+      </div>
     );
   }
 }

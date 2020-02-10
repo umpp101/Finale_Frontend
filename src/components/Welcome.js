@@ -24,11 +24,7 @@ class Welcome extends Component {
                 </div>
                 </div>
                 <div class="footer">
-                {/* <div class="row">
-  <div class="column">education</div>
-  <div class="column">education</div>
-  <div class="column">education</div>
-</div> */}
+                
 <section class="columns">
 	
 	<div class="column">

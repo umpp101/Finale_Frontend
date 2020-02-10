@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Navbar, Nav, Modal } from "react-bootstrap";
+import { Card, Navbar, Nav, Modal, Form} from "react-bootstrap";
 
 export class PostShow extends Component {
 
@@ -13,16 +13,26 @@ export class PostShow extends Component {
              body: "",
              view_count: 11,
              user_id: 3,
-             category_id: 2
+             category_id: 2,
+            commentBody: "",
+            // commentUser_id: this.props.currentUser.id,
+            // CommentPost_id: this.props.currentPost.id
+        
         }
     }
     
     handleChange = (e) => {
+        console.log(e.target.value)
      this.setState({
        [e.target.name]: e.target.value
      })
    }
  
+   handleEnter = (e) =>{
+       if (e.key === "Enter"){
+        this.props.newComment(this.state.commentBody)
+       }
+   }
    
 
     modalClose() {
@@ -33,16 +43,37 @@ export class PostShow extends Component {
         });
       }
     
-      modalOpen() {
+    modalOpen() {
         this.setState({ 
             modal: true 
         });
       }
 
-
-
+      renderComments = () => {
+        if (this.props.currentPost.comments) {
+            const result = this.props.currentPost.comments.map(comment => {
+                return (
+                    // {<img src={this.img}>}
+                      <Card className="commentCards">
+                          <Card.Title className="card-title1"> Admin </Card.Title>
+                          <Card.Body>
+                              <Card.Header className="card-header1">{comment.title}</Card.Header>
+                              <Card.Text>{comment.body}</Card.Text>
+                          </Card.Body>
+                          {/* <Card.Link className="post-comments-links" align="left"><u>{post.comments.length} Comments</u></Card.Link> */}
+                      </Card>
+                      
+                  );
+              });
+              return result;
+              console.log("result:", result);
+          }
+      };
+    
+    
     render() {
-        console.log(this.constructor.name)
+        // console.log(this.constructor.name)
+        // console.log(this.props.currentPost.id)
         return (
 
             <div>
@@ -118,6 +149,36 @@ export class PostShow extends Component {
                                 <Card.Text>{this.props.currentPost.body}</Card.Text>
                             </Card.Body>
                         </Card>
+                    </div>
+                    <div>
+                        {this.renderComments()}
+                    </div>
+                    <div>
+                
+                        <Form.Control 
+                        onKeyDown={this.handleEnter}
+                        // onKeyDown={(e) => {e.key === "enter" ? this.props.newComment(this.state.commentBody): null}}
+                        className="new-comment-form" 
+                        placeholder="Add a comment" 
+                        type="text"
+                        value={this.state.commentBody}
+                        name="commentBody"
+                        onChange={e => this.handleChange(e)} />
+                        <br />
+                        {/* <div className="form-group">
+                            <button onClick={e => {
+                                this.props.newComment(this.state.commentBody)
+                            }} type="button">
+                                Submit
+                            </button>
+
+
+                            <button onKeyDown={e => {
+                                this.props.newComment(this.state.commentBody)
+                            }} type="button">
+                        </div> */}
+                        
+                    
                     </div>
                 </div>
 
