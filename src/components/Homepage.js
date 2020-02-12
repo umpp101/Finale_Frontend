@@ -1,6 +1,5 @@
 import React, { Component} from "react";
 import { Card, Navbar, Nav, Modal } from "react-bootstrap";
-import {Pagination} from "semantic-ui-react";
 
 export class Homepage extends Component {
 
@@ -69,7 +68,6 @@ export class Homepage extends Component {
                 );
             });
             return result;
-            console.log("result:", result);
         }
     };
     
@@ -85,7 +83,7 @@ export class Homepage extends Component {
                         <Navbar.Toggle />
                         <Navbar.Collapse className="justify-content-end">
                             <Nav>
-                                <Nav.Link className="nav-button1" href="">My Journal</Nav.Link> <br></br>
+                                <Nav.Link className="nav-button1" href="/chat">My Messages</Nav.Link> <br></br>
                                 <Nav.Link className="nav-button2" href="">Community</Nav.Link> <br></br>
                                 <Nav.Link className="nav-button3" href="" onClick={this.props.handleLogout}>Logout</Nav.Link> <br></br>
                             </Nav>

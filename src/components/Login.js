@@ -23,9 +23,7 @@ export class Login extends Component {
       <div className="loginPage">
         <form onSubmit={(e) => {this.props.handleLoginSubmit(e, this.state)}}>
             <h1 className="login-logo">Jhana</h1>
-              <li>
-                <Link to="/homepage">Homepage</Link>
-              </li>
+             
   
             <div className="form-group" align="center">
                 <label>Username</label>

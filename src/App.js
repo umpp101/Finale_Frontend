@@ -6,7 +6,7 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Welcome from "./components/Welcome";
 import PostShow from "./components/PostShow";
-import Modal from "./components/Modal";
+import Chat from "./components/Chat";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import {
@@ -24,20 +24,23 @@ class App extends Component {
     this.state = {
       currentUser: {},
       currentPost: {},
+      currentConvo: {},
       allUsers: [],
       allPosts: [],
+      myConvos: [],
       allComments: [],
-      currentUserPosts: [],
+      // currentUserPosts: [],
       loading: true,
-      currentPage: 1
+      currentPage: 1,
       // #this will check the current fetches, set to true, due to the fetches being done below
-    };
+    }
+    this.socket = undefined;
   }
 
   // ***********************************************************************************
   handleLoginSubmit = async (event, loginState) => {
     event.preventDefault();
-    console.log(loginState);
+    // console.log(loginState);
     const fetchUrl = "http://localhost:3000/login";
     const settings = {
       method: "POST",
@@ -55,7 +58,7 @@ class App extends Component {
     };
     const response = await fetch(fetchUrl, settings);
     const postData = await response.json();
-    console.log(postData)
+    // console.log(postData)
     if (!!postData.error === true) return null
     //  we go thru the post data keys and check if the error key is present,
     //  if so... we give them an error messages about username/password being invalid.
@@ -91,9 +94,18 @@ class App extends Component {
   fetchPosts = async () => {
     const response = await fetch("http://localhost:3000/posts")
     const apiData = await response.json();
-    console.log(apiData.posts)
+    // console.log(apiData.posts)
     this.setState({
       allPosts: apiData.posts,
+      loading: false
+    })
+  }
+  fetchMyConvos = async () => {
+    const response = await fetch(`http://localhost:3000/users/${this.state.currentUser.id}/conversations`)
+    const apiData = await response.json();
+    // console.log(apiData)
+    this.setState({
+      myConvos: apiData.conversations,
       loading: false
     })
   }
@@ -140,7 +152,7 @@ class App extends Component {
   };
   // ***********************************************************
   handleNewPostSubmit = async (postForm, componentName) => {
-    console.log(postForm)
+    // console.log(postForm)
     // event.preventDefault();
     const fetchUrl = "http://localhost:3000/posts";
     const settings = {
@@ -153,7 +165,7 @@ class App extends Component {
         post: {
           title: postForm.title,
           body: postForm.body,
-          user_id: 2,
+          user_id: this.state.currentUser.id,
           category_id: 1,
         }
       })
@@ -167,14 +179,14 @@ class App extends Component {
       allPosts: [...this.state.allPosts, { ...postData.post }]
     })
     if (componentName === PostShow) {
-      console.log('this.')
+      // console.log('this.')
       this.props.history.push('/homepage')
     }
 
   }
 
   handleNewCommentSubmit = async (commentForm) => {
-    console.log(commentForm)
+    // console.log(commentForm)
     // e.preventDefault();
     const fetchUrl = "http://localhost:3000/comments";
     const settings = {
@@ -204,7 +216,7 @@ class App extends Component {
         return post
       }
     });
-    let newPost = {...this.state.currentPost}
+    let newPost = { ...this.state.currentPost }
     newPost.comments = [...newPost.comments, postData.comment]
 
     await this.setState({
@@ -237,16 +249,6 @@ class App extends Component {
     })
   }
 
-  // fetchMorePosts = async() => {
-  //   const response = await fetch("http://localhost:3000/posts/?page=" + (this.state.currentPage + 1))
-  //   //we add the "page Number" URL param because rails needs it to return the posts according to the page
-  //   const apiData = await response.json();
-  //   console.log(apiData.posts)
-  //   this.setState({
-  //     allPosts: apiData.posts,
-  //     loading: false
-  // })
-  // }
 
   componentDidMount() {
     if (localStorage.getItem("token") !== null) {
@@ -261,7 +263,7 @@ class App extends Component {
       })
         .then(res => res.json())
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           this.setState({
             currentUser: {
               id: Number(data.user.data.id),
@@ -270,12 +272,103 @@ class App extends Component {
           })
         })
         .then(() => this.fetchPosts())
+        .then(() => this.fetchMyConvos())
     }
+  }
+  // ****************************************************************************
+
+  handleSendEvent = (message) => {
+    // get the conversation ID so that youcan 
+    const msg = {
+      command: 'message',
+      identifier: JSON.stringify({
+        channel: "ChatChannel"
+      }),
+      data: JSON.stringify({
+        action: 'speak',
+        message: {
+          body: message,
+          user_id: this.state.currentUser.id,
+          conversation_id: this.state.currentConvo.id,
+        }
+      })
+    }
+    this.socket.send(JSON.stringify(msg))
+  }
+
+
+  setConvo = (obj) => {
+    this.setState({
+      currentConvo: obj
+    })
   }
 
 
 
+
+  openWsConnection = async () => {
+    this.socket = await new WebSocket("ws://localhost:3000/cable");
+
+    this.socket.onopen = (e) => {
+      // console.log(e);
+      console.log("Starting to send to server");
+      let msg = {
+        command: 'subscribe',
+        identifier: JSON.stringify({
+          channel: "ChatChannel"
+        })
+      }
+      this.socket.send(JSON.stringify(msg))
+    }
+
+    this.socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      // check to see if our typed message id exists in our "my convos" or currentConvo.messages before we set state
+      if (this.state.currentConvo.messages){
+
+      
+      let currentConvoIds = this.state.currentConvo.messages && this.state.currentConvo.messages.map(msg => (msg.id))   
+
+      // let myConvoIds = this.state.myConvos.messages.map(msg => (msg.id))
+
+      if (data.message !== undefined && !!data.message.true_message === true && !currentConvoIds.includes(data.message.true_message.id)) {
+        console.log(data)
+        let convos = this.state.myConvos.map(convo => {
+          if (convo.id === this.state.currentConvo.id) {
+            convo.messages = [...convo.messages, data.message.true_message]
+            return convo
+          } else {
+            return convo
+          }
+        });
+        if (Object.keys(this.state.currentConvo).length > 0 ) {
+          let newConvo = { ...this.state.currentConvo }
+          console.log(newConvo)
+
+          newConvo.messages = [...newConvo.messages, data.message.true_message]
+          this.setState({
+            myConvos: convos,
+            currentConvo: newConvo
+          })
+        } else {
+        this.setState({
+          myConvos: convos
+        })
+      }
+      }
+    };
+  }
+    this.socket.onerror = (error) => {
+      console.log(`[error] ${error.message}`);
+    };
+  }
+
+
+  // ****************************************************************************
+
+
   render() {
+    // console.log(currentConvoIds.includes(data.message.true_message.id))
     return (
       <div>
         <Switch>
@@ -289,6 +382,18 @@ class App extends Component {
               newPost={this.handleNewPostSubmit}
               newComment={this.handleNewCommentSubmit}
               handleLogout={this.handleLogout} />}
+          />
+          <Route
+            exact
+            path="/chat"
+            render={props => <Chat {...props}
+              currentUser={this.state.currentUser}
+              handleLogout={this.handleLogout}
+              myConvos={this.state.myConvos}
+              handleSendEvent={this.handleSendEvent}
+              openWsConnection={this.openWsConnection}
+              setConvo={this.setConvo}
+            />}
           />
           <Route
             exact

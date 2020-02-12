@@ -22,7 +22,7 @@ export class PostShow extends Component {
     }
     
     handleChange = (e) => {
-        console.log(e.target.value)
+        // console.log(e.target.value)
      this.setState({
        [e.target.name]: e.target.value
      })
@@ -57,7 +57,7 @@ export class PostShow extends Component {
                       <Card className="commentCards">
                           <Card.Title className="card-title1"> Admin </Card.Title>
                           <Card.Body>
-                              <Card.Header className="card-header1">{comment.title}</Card.Header>
+                              {/* <Card.Header className="card-header1">{comment.title}</Card.Header> */}
                               <Card.Text>{comment.body}</Card.Text>
                           </Card.Body>
                           {/* <Card.Link className="post-comments-links" align="left"><u>{post.comments.length} Comments</u></Card.Link> */}
