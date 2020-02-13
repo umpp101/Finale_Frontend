@@ -1,5 +1,6 @@
 import React, { Component} from "react";
 import { Card, Navbar, Nav, Modal } from "react-bootstrap";
+import {Link} from 'react-router-dom';
 
 export class Homepage extends Component {
 
@@ -87,23 +88,23 @@ export class Homepage extends Component {
             <div>
                 <header>
                     <nav class="navbar navbar-expand-lg navbar-light bg-color">
-                        <a class="navbar-brand" href="#">Jhana</a>
+                        <Link to='/homepage' class="navbar-brand" href="#">Jhana</Link>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse " id="navbarText">
                             <ul class="navbar-nav ml-auto ">
                                 <li class="nav-item">
-                                    <a href="/welcome" class="badge badge-warning">Community</a>
+                                    <Link to="/welcome" class="badge badge-warning">Community</Link>
                                 </li>
                                 {/* <li class="nav-item">
                                     <a href="" class="badge badge-warning">My Journals</a>
                                 </li> */}
                                 <li class="nav-item">
-                                    <a href="/chat" class="badge badge-warning">Messages</a>
+                                    <Link to="/chat" class="badge badge-warning">Messages</Link>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="" onClick={this.props.handleLogout} class="badge badge-warning">Logout</a>
+                                    <div onClick={this.props.handleLogout} class="badge badge-warning">Logout</div>
                                 </li>
                             </ul>
 

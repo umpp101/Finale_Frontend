@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Link} from 'react-router-dom';
 // import { Card, Navbar, Nav, Modal, Form } from "react-bootstrap";
 
 class Convo extends React.Component {
@@ -24,51 +25,40 @@ class Convo extends React.Component {
 
   // };
 
+  getOtherUserName = () => {
+    if (this.props.allUsers.length !== 0) {
+      let otherUserId;
+      if (this.props.currentUser.id === this.props.convo.receiver_id){
+        otherUserId = this.props.convo.sender_id
+      }else{
+        otherUserId = this.props.convo.receiver_id
+      }
+      let otherUser = this.props.allUsers.find(user => user.id === otherUserId) 
+      return otherUser.first_name
+    }
+
+  }
 
 
 
 
   render() {
-    // console.log(this.props)
+
     return (
 
       <div>
-        <header>
-          <nav class="navbar navbar-expand-lg navbar-light bg-color">
-            <a class="navbar-brand" href="#">Jhana</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse " id="navbarText">
-              <ul class="navbar-nav ml-auto ">
-                <li class="nav-item">
-                  <a href="/welcome" class="badge badge-warning">Community</a>
-                </li>
-                {/* <li class="nav-item">
-                                    <a href="" class="badge badge-warning">My Journals</a>
-                                </li> */}
-                <li class="nav-item">
-                  <a href="/chat" class="badge badge-warning">Messages</a>
-                </li>
-                <li class="nav-item">
-                  <a href="" onClick={this.props.handleLogout} class="badge badge-warning">Logout</a>
-                </li>
-              </ul>
-
-            </div>
-          </nav>
-        </header>
+        
         <div class="container-fluid">
           <div class="row pb-5">
             <div class="col-md-4 br">
-              <h1><b>Inbox</b></h1>
+              
               <div class="row pt-3 btb ">
                 <div class="col-sm-3 ">
-                  <a href="#"><img src="./img/avater.png" alt="" /></a>
+                  {/* <a href="#"><img src="./img/avater.png" alt="" /></a> */}
                 </div>
                 <div class="col-sm-9"
                   onClick={() => this.props.setConvo(this.props.convo)}>
-                  <p><a href="#"><b class="username">{this.props.convo.receiver_id} is the receiver:  the other person name here</b> <span class="date"> 1:52 PM</span></a></p>
+                  <p><a href="#"><b class="username">{this.getOtherUserName()}</b> <span class="date"> 1:52 PM</span></a></p>
                   <p class="inbox"><a href="#">Preview for message here</a></p>
                 </div>
               </div>

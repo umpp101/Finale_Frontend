@@ -32,6 +32,7 @@ class App extends Component {
       // currentUserPosts: [],
       loading: true,
       currentPage: 1,
+      currentConvoName: ''
       // #this will check the current fetches, set to true, due to the fetches being done below
     }
     this.socket = undefined;
@@ -82,6 +83,20 @@ class App extends Component {
     });
   };
 
+  getOtherUserName = () => {
+    if (this.state.allUsers.length !== 0) {
+      let otherUserId;
+      if (this.state.currentUser.id === this.state.currentConvo.receiver_id){
+        otherUserId = this.state.currentConvo.sender_id
+      }else{
+        otherUserId = this.state.currentConvo.receiver_id
+      }
+      let otherUser = this.state.allUsers.find(user => user.id === otherUserId) 
+      this.setState({currentConvoName: otherUser.first_name})
+    }
+
+  }
+
   // ***********************************************************************************
 
   // fetchUsers = async() => {
@@ -97,6 +112,15 @@ class App extends Component {
     // console.log(apiData.posts)
     this.setState({
       allPosts: apiData.posts,
+      loading: false
+    })
+  }
+  fetchUsers = async () => {
+    const response = await fetch("http://localhost:3000/users")
+    const apiData = await response.json();
+    // console.log(apiData)
+    this.setState({
+      allUsers: apiData.users,
       loading: false
     })
   }
@@ -184,7 +208,35 @@ class App extends Component {
     }
 
   }
+  // ***********************************************************
+  handleNewConvoSubmit = async (e,selectedUser) => {
+    console.log(selectedUser.target.value)
+    e.preventDefault();
+    const fetchUrl = (`http://localhost:3000/users/${this.state.currentUser.id}/conversations`);
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        conversation: {
+          sender_id: this.state.currentUser.id,
+          receiver_id: selectedUser.target.value
+        }
+      })
+    };
+    const response = await fetch(fetchUrl, settings);
+    const postData = await response.json();
+    console.log(postData)
+    if (!!postData.error === true) return null
+    // console.log(postData.error)
+    await this.setState({
+      myConvos: [...this.state.myConvos, { ...postData.conversation }]
+    })
+    //   this.props.history.push('/homepage')
 
+  }
   handleNewCommentSubmit = async (commentForm) => {
     // console.log(commentForm)
     // e.preventDefault();
@@ -273,12 +325,14 @@ class App extends Component {
         })
         .then(() => this.fetchPosts())
         .then(() => this.fetchMyConvos())
+        .then(() => this.fetchUsers())
     }
   }
   // ****************************************************************************
 
-  handleSendEvent = (message) => {
-    // get the conversation ID so that youcan 
+  handleSendEvent = (message,event) => {
+    event.preventDefault()
+  console.log(this.socket)
     const msg = {
       command: 'message',
       identifier: JSON.stringify({
@@ -298,17 +352,16 @@ class App extends Component {
 
 
   setConvo = (obj) => {
-    console.log(obj)
     this.setState({
       currentConvo: obj
-    })
+    }, ()=> this.getOtherUserName())
   }
 
 
 
 
   openWsConnection = async () => {
-    this.socket = await new WebSocket("ws://localhost:3000/cable");
+    this.socket = new WebSocket("ws://localhost:3000/cable");
 
     this.socket.onopen = (e) => {
       // console.log(e);
@@ -320,45 +373,66 @@ class App extends Component {
         })
       }
       this.socket.send(JSON.stringify(msg))
+
     }
 
     this.socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
+      // console.log(data)
       // check to see if our typed message id exists in our "my convos" or currentConvo.messages before we set state
-      if (this.state.currentConvo.messages){
-
-      
-      let currentConvoIds = this.state.currentConvo.messages && this.state.currentConvo.messages.map(msg => (msg.id))   
-
-      // let myConvoIds = this.state.myConvos.messages.map(msg => (msg.id))
-
-      if (data.message !== undefined && !!data.message.true_message === true && !currentConvoIds.includes(data.message.true_message.id)) {
-        console.log(data)
-        let convos = this.state.myConvos.map(convo => {
-          if (convo.id === this.state.currentConvo.id) {
-            convo.messages = [...convo.messages, data.message.true_message]
-            return convo
-          } else {
-            return convo
-          }
-        });
-        if (Object.keys(this.state.currentConvo).length > 0 ) {
-          let newConvo = { ...this.state.currentConvo }
-          console.log(newConvo)
-
-          newConvo.messages = [...newConvo.messages, data.message.true_message]
-          this.setState({
-            myConvos: convos,
-            currentConvo: newConvo
+      if (data.type == "confirm_subscription"){
+        const message = {
+          command: 'message',
+          identifier: JSON.stringify({
+            channel: "ChatChannel"
+          }),
+          data: JSON.stringify({
+            action: 'convo_connector',
+            message: JSON.stringify({
+              user_id: this.state.currentUser.id
+            })
           })
-        } else {
-        this.setState({
-          myConvos: convos
-        })
-      }
-      }
-    };
-  }
+        }
+        this.socket.send(JSON.stringify(message))
+      } else if (this.state.currentConvo.messages) {
+        
+
+        let currentConvoIds = this.state.currentConvo.messages && this.state.currentConvo.messages.map(msg => (msg.id))
+        // let myConvoIds = this.state.myConvos.messages.map(msg => (msg.id))
+        console.log("first condition:", data.message !== undefined)
+        console.log("second condition:", !!data.message.true_message === true)
+        console.log(data)
+        // console.log("third condition:", !currentConvoIds.includes(data.message.true_message.id))
+
+        if (data.message !== undefined && !!data.message.true_message === true && !currentConvoIds.includes(data.message.true_message.id)) {
+          
+          
+          let convos = this.state.myConvos.map(convo => {
+            if (convo.id === this.state.currentConvo.id) {
+              convo.messages = [...convo.messages, data.message.true_message]
+              return convo
+            } else {
+              return convo
+            }
+          });
+          if (Object.keys(this.state.currentConvo).length > 0) {
+            let newConvo = { ...this.state.currentConvo }
+         
+
+            newConvo.messages = [...newConvo.messages, data.message.true_message]
+            this.setState({
+              myConvos: convos,
+              currentConvo: newConvo
+            })
+          } else {
+            this.setState({
+              myConvos: convos
+            })
+          }
+        }
+      };
+
+    }
     this.socket.onerror = (error) => {
       console.log(`[error] ${error.message}`);
     };
@@ -393,7 +467,11 @@ class App extends Component {
               myConvos={this.state.myConvos}
               handleSendEvent={this.handleSendEvent}
               openWsConnection={this.openWsConnection}
+              currentConvo={this.state.currentConvo}
               setConvo={this.setConvo}
+              allUsers={this.state.allUsers}
+              handleNewConvo={this.handleNewConvoSubmit}
+              currentConvoName={this.state.currentConvoName}
             />}
           />
           <Route
