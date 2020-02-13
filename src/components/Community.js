@@ -4,10 +4,10 @@ class Community extends Component {
     render() {
         return (
             <div>
-                
-            </div>
-        );
-    }
-}
 
-export default Community;
+                </div>
+                );
+            }
+        }
+        
+        export default Community;

@@ -298,6 +298,7 @@ class App extends Component {
 
 
   setConvo = (obj) => {
+    console.log(obj)
     this.setState({
       currentConvo: obj
     })

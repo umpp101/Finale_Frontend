@@ -1,55 +1,87 @@
 import React, { Component } from "react";
-import {Link} from "react-router-dom";
-import {Navbar, Nav } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { Navbar, Nav } from "react-bootstrap";
 
 
 class Welcome extends Component {
     render() {
         return (
             <div>
-                <div class="header">
-                    <Navbar>
-                        <Navbar.Brand href="/homepage" align="center">Jhana</Navbar.Brand>
-                        <Navbar.Toggle />
-                        <Navbar.Collapse className="justify-content-end">
-                            <Nav>
-                                <Nav.Link className="nav-button1" href="/login">Sign In</Nav.Link> <br></br>
-                                <Nav.Link className="nav-button2" href="/signup">Sign Up</Nav.Link> <br></br>
-                            </Nav>
-                        </Navbar.Collapse>
-                    </Navbar>
-                    <div class="welcome-content">
-                    <img align="left" className="Welcome-pic" src="https://lh3.googleusercontent.com/Ibf9yeD-rWeWRdlt3PO0ajIET0HrYOdHkyD-gD_p3LVcr4zrB_1rmtR3iQDBpHYaWYGwXrIPHny8yL4bp14ehGoj9AgdOrWd9ZrHgyNRcHR7Rh1yN0U9OwDgC_zzVAr7u3tLwnMq" />
-                    <p align="center" className="Welcome-p"> Jhana is a space for survivors of sexual violence to begin the process of healing through education, self-expression and community.</p>
+                <header>
+                    <nav class="navbar navbar-expand-lg navbar-light bg-color">
+                        <a class="navbar-brand" href="#">Jhana</a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse " id="navbarText">
+                            <ul class="navbar-nav ml-auto ">
+
+                                <li class="nav-item">
+                                    <a href="/login" class="badge badge-warning">LogIn</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/signup" class="badge badge-warning">Sign Up</a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </nav>
+                </header>
+
+                <div class="container">
+                    <div class="row pt-5 ">
+                        <div class="col-sm-5">
+                            <img src="img/1.png" alt="" />
+                        </div>
+
+                        <div class="col-sm-7 ">
+                            <p class="bheader">Jhana is a space for survivors of sexual violence to begin the process of healing through education, self-expression and community.</p>
+                        </div>
+                    </div>
                 </div>
+                <div class="hborder w-100"></div>
+
+                <div class="container">
+                    <div class="row pt-5 m-auto">
+                        <div class="col-sm-4">
+                            <span class="badge badge-warning bheader m-auto d-block">About Sexual Violence </span>
+                            <img class="pt-3 m-auto d-block" src="img/3.png" alt="" width="50%" />
+                        </div>
+
+                        <div class="col-sm-4">
+                            <span class="badge badge-warning bheader m-auto d-block"> For Survivors</span>
+                            <img class="pt-3 m-auto d-block" src="img/4.png" alt="" width="50%" />
+                        </div>
+
+                        <div class="col-sm-4">
+                            <span class="badge badge-warning bheader m-auto d-block"> For Family & Friends</span>
+                            <img class="pt-3 m-auto d-block" src="img/5.png" alt="" width="60%" />
+                        </div>
+                    </div>
                 </div>
-                <div class="footer">
-                
-<section class="columns">
-	
-	<div class="column">
-    <Nav.Link className="welcome-buttons1">About Sexual Violence</Nav.Link>
-		{/* <button classname="welcome-buttons1">About Sexual Violence</button> */}
-            <img className="welcome-bottom-pics" src="https://lh6.googleusercontent.com/vq1BI3sohIhgl5rhC3UK28Lyu_qEqpoR50lM8PN1ZDcTgvv3ScxwLvcR-Xgcyx45k_4goj_yG4eer8Q877IJdMMvspytEz7OKTvYvRfIDE_s-Dr0rlWqLO6SKB4GAHZtCAP9Fy_-"/>
-	</div>
-	
-	<div class="column">
-    <Nav.Link className="welcome-buttons1">For Survivors </Nav.Link>
-		{/* <button classname="welcome-buttons2">For Survivors </button> */}
-		<img className="welcome-bottom-pics" src="https://lh3.googleusercontent.com/wP7NZEEFsMhR6bLpxLNYwUsNA-SXAoEpaoWPBJeARPkmlKVBnHCwHH6oX6aeYU7eZ1xfGMeKlbeXVfzMjv4sioZCnTodcuSbbPy6s8qlBxmEtCKnm9KvBG3VSp6lbTMiDb0iyXms"/>
-	</div>
-  
-  <div class="column">
-  <Nav.Link className="welcome-buttons1">For Family and Friends </Nav.Link>
-		{/* <button classname="welcome-buttons3">For Family and Friends </button> */}
-		<img className="welcome-bottom-pics" src="https://lh6.googleusercontent.com/LKoPYDMg3Ya19I4CJo9Mk2pqTmoRuMFNG1sQ1CmbKO6rmGSywMh6D8ZdK8XeOw2mhaU9jFkTgMJzdn7zkfPuAXPt16RYteFID51Wvfw"/>
-	</div>
-    
-	
-</section>	
-                </div>
-                {/* </div> */}
-          </div>
+                {/* <section >
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert">Okay</button>
+                                    <div class="row text-white">
+                                        <div class="col-sm-5 font-weight-bold">
+                                            <h1>Trigger Warning</h1>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <p class="bcopy">The following content may contain trigering and/or sensitive material about sexual violance</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section> */}
+            </div>
+
         )
     }
 }
